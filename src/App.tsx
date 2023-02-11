@@ -10,6 +10,7 @@ function App() {
   };
   return (
     <div className="App">
+      <h1 className="App_Header">Поиск ревьюера</h1>
       <button className="settingsButton" onClick={toggleSettings}>{settingsVisibility ? 'Скрыть' : 'Показать'} настройки</button>
 
       {settingsVisibility
