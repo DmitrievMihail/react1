@@ -1,11 +1,13 @@
 .ReviewFinder {
-    text-align:left;
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 .ReviewFinderList {
     list-style-type: none;
     margin: 0;
     padding: 3px 10px;
+    text-align: left;
     /* display: flex; */
 }
 
@@ -16,4 +18,8 @@
 .ReviewFinderList input{
     width: 350px;
     float: right;
+}
+
+.ReviewFinderButton {
+
 }

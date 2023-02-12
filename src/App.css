@@ -18,10 +18,11 @@
 .settingsButton{
   width: 150px;
   margin-top: 10px;
+  margin-bottom: 20px;
 }
 
-
-.App-header {
-
+.findButton{
+  margin: 5px auto;
+  display: block;
+  text-align: center;
 }
-
