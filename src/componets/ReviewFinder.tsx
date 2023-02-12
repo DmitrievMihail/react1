@@ -16,6 +16,14 @@ const ReviewFinder = () => { // props: {visible: 'true' | 'false'}
     const [repo, setRepo] = useLocalStorage('repo', '');
     const [black, setBlack] = useLocalStorage('black', '');
 
+    const loadReviewers = () => {
+        console.log('Грузим список ревьюеров');
+    };
+
+    const getReviewer = () => {
+        console.log('Подбираем ревьюера из списка');
+    };
+
     return (
         <div className={classes.ReviewFinder}>
             <button
@@ -43,16 +51,21 @@ const ReviewFinder = () => { // props: {visible: 'true' | 'false'}
                             onChange={(e) => setRepo(e.target.value)}
                         />
                     </li>
-                    <li>
-                        Чёрный список: <input
-                            type='text'
-                            placeholder='Логины, которые не должны быть ревьюерами'
-                            value={black}
-                            onChange={(e) => setBlack(e.target.value)}
-                        />
-                    </li>
                 </ul>
             }
+        <button className="loadButton" onClick={loadReviewers}>Загрузить ревьюеров</button>
+        <ul>
+            <li>
+                Чёрный список: <input
+                    type='text'
+                    placeholder='Логины, которые не должны быть ревьюерами'
+                    value={black}
+                    onChange={(e) => setBlack(e.target.value)}
+                />
+            </li>
+        </ul>
+
+        <button className="findButton" onClick={getReviewer}>Подобрать ревьюера</button>
         </div>
     );
 };
