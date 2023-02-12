@@ -1,5 +1,5 @@
 import React, {useState } from 'react';
-import Select from 'react-select';
+import Select, { MultiValue } from 'react-select';
 import useLocalStorage from './../storage';
 import loadJSON from './../loader';
 // eslint-disable-next-line
@@ -13,15 +13,17 @@ const ReviewFinder = () => {
     let reviewerList: Array<reviewerType> = [ // { value: 1, label: 'Purple'},
         { value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true },
     ];
+    const [black, setBlack] = useState(reviewerList);
+    const disabledReviewerIds: Array<number> = [];
+    const setBlackList = (e: MultiValue<reviewerType>) => {
+        disabledReviewerIds.length = 0;
+        console.log(e);
+        e.map((reviewer: reviewerType) => disabledReviewerIds.push(reviewer.value));
+    };
 
     const [settingsVisibility, setSettingsVisibility] = useLocalStorage('settingsVisibility', '0');
     const [login, setLogin] = useLocalStorage('login', '');
     const [repo, setRepo] = useLocalStorage('repo', '');
-    const [black, setBlack] = useState(reviewerList);
-
-    const setBlackList = (e: unknown) => {
-        console.log(e);
-    };
 
     const loadReviewers = async () => {
         console.log('Грузим список ревьюеров');
@@ -32,8 +34,7 @@ const ReviewFinder = () => {
             // eslint-disable-next-line
             type reviewerTypeLoad = { 'id': number; 'avatar_url': string; 'login': string; type: string};
             reviewerList = reviewersData.map((reviewer: reviewerTypeLoad) => {
-                return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url};
-                // Возвращает элемент для new_array
+                return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
             });
             setBlack(reviewerList);
             console.log(reviewerList);
@@ -44,7 +45,15 @@ const ReviewFinder = () => {
 
     const getReviewer = () => {
         console.log('Подбираем ревьюера из списка');
-        console.log(reviewerList);
+        const filteredBlack = black.filter((reviewer: reviewerType) => {
+            return (disabledReviewerIds.includes(reviewer.value));
+        });
+        console.log(black);
+        if (filteredBlack.length) {
+            console.log(filteredBlack[Math.floor(Math.random() * (filteredBlack.length))]);
+        } else {
+            console.log('В списке нет ревьюверов');
+        }
     };
 
     return (
