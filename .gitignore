@@ -29,3 +29,5 @@ start.bat
 help.txt
 .prettierrc.js
 .eslintrc.js
+
+yarn.lock
