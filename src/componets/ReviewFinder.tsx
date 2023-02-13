@@ -10,49 +10,70 @@ const ReviewFinder = () => {
 
     // eslint-disable-next-line
     type reviewerType = { 'value': number; 'label': string; 'avatar': string; 'isDisabled'?: boolean};
-    let reviewerList: Array<reviewerType> = [ // { value: 1, label: 'Purple'},
+    let reviewerList: Array<reviewerType> = [
         { value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true },
     ];
+    let filteredBlack: Array<reviewerType> = []; // Отфильтрованный массив
     const [black, setBlack] = useState(reviewerList);
-    const disabledReviewerIds: Array<number> = [];
-    const setBlackList = (e: MultiValue<reviewerType>) => {
-        disabledReviewerIds.length = 0;
-        console.log(e);
-        e.map((reviewer: reviewerType) => disabledReviewerIds.push(reviewer.value));
+    const [blackSelected, setblackSelected] = useState(filteredBlack);
+
+    const [disabledReviewerIds, setDisabledReviewerIds] = useState(Array<number>);
+    const setBlackList = (e: MultiValue<reviewerType | undefined>) => {
+        if (typeof e !== 'undefined') {
+            // @ts-expect-error: выше уже проверили undefined
+            setblackSelected(e);
+            setDisabledReviewerIds(
+                // @ts-expect-error: выше уже проверили undefined
+                e.map((reviewer: reviewerType) => reviewer.value)
+            );
+        } else {
+            setDisabledReviewerIds([]);
+            setblackSelected([]);
+        }
     };
 
+    const [showReviewer, setShowReviewer] = useState({id: 0, login: '', avatar: ''});
     const [settingsVisibility, setSettingsVisibility] = useLocalStorage('settingsVisibility', '0');
     const [login, setLogin] = useLocalStorage('login', '');
     const [repo, setRepo] = useLocalStorage('repo', '');
 
+    const [loadingError, setLoadingError] = useState('');
+
     const loadReviewers = async () => {
-        console.log('Грузим список ревьюеров');
+        // console.log('Грузим список ревьюеров');
+        setShowReviewer({id: 0, login: '', avatar: ''});
+        setBlack([]);
+        setblackSelected([]);
         try {
             const reviewersData = await loadJSON(`https://api.github.com/repos/${login}/${repo}/contributors`);
-            console.log(reviewersData);
-            // reviewerList.length = 0; // Очистили массив перед загрузкой
+            // console.log(reviewersData);
             // eslint-disable-next-line
             type reviewerTypeLoad = { 'id': number; 'avatar_url': string; 'login': string; type: string};
             reviewerList = reviewersData.map((reviewer: reviewerTypeLoad) => {
                 return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
             });
+            // reviewerList.length = 2;
             setBlack(reviewerList);
-            console.log(reviewerList);
-        } catch (err: unknown) {
+            // console.log(reviewerList);
+            setLoadingError('');
+        } catch (err) {
             console.log(err);
+            setLoadingError('Ошибка загрузки ревьюеров');
         }
     };
 
     const getReviewer = () => {
-        console.log('Подбираем ревьюера из списка');
-        const filteredBlack = black.filter((reviewer: reviewerType) => {
-            return (disabledReviewerIds.includes(reviewer.value));
+        // console.log('Подбираем ревьюера из списка', disabledReviewerIds);
+        filteredBlack = black.filter((reviewer: reviewerType) => {
+            return (!disabledReviewerIds.includes(reviewer.value));
         });
-        console.log(black);
-        if (filteredBlack.length) {
-            console.log(filteredBlack[Math.floor(Math.random() * (filteredBlack.length))]);
+        // console.log(black);
+        if (!filteredBlack.length) {
+            // console.log('В списке нет ревьюверов');
+            setShowReviewer({id: 0, login: '', avatar: ''});
         } else {
-            console.log('В списке нет ревьюверов');
+            const reviewer = filteredBlack[Math.floor(Math.random() * (filteredBlack.length))];
+            setShowReviewer({id: reviewer.value, login: reviewer.label, avatar: reviewer.avatar});
         }
     };
 
@@ -85,19 +106,37 @@ const ReviewFinder = () => {
                     </li>
                 </ul>
             }
-        <button className={classes.ReviewLoadButton} onClick={loadReviewers}>Загрузить ревьюеров</button>
+            <button className={classes.ReviewLoadButton} onClick={loadReviewers}>Загрузить ревьюеров</button>
 
-        <Select
-            isMulti
-            placeholder="Логины, которые не должны быть ревьюерами"
-            name="colors"
-            options={black}
-            className="basic-multi-select"
-            classNamePrefix="select"
-            onChange={(e) => setBlackList(e)}
-        />
+            {!loadingError ?
+                <div>
+                    <Select
+                    isMulti
+                    placeholder="Логины, которые не должны быть ревьюерами"
+                    name="colors"
+                    value={blackSelected}
+                    options={black}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={(e) => setBlackList(e)}
+                    />
 
-        <button className={classes.ReviewFindButton} onClick={getReviewer}>Подобрать ревьюера</button>
+                    <button className={classes.ReviewFindButton} onClick={getReviewer}>Подобрать случайного ревьюера</button>
+                    <div className={classes.ReviewerInfo}>
+                    {showReviewer.id ?
+                        <div>
+                            <img src={showReviewer.avatar} style={{width: '100px'}} />
+                            <h3>id: <b>{showReviewer.id}</b></h3>
+                            <h3>login: <b>{showReviewer.login}</b></h3>
+                        </div>
+                    :
+                        <h3>Ревьюер отсутствует</h3>
+                    }
+                    </div>
+                </div>
+            :
+                <h3 className={classes.Error}>{loadingError}</h3>
+            }
         </div>
     );
 };

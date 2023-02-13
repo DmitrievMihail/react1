@@ -25,7 +25,27 @@
 }
 
 .ReviewFindButton, .ReviewLoadButton{
-    margin: 5px auto;
+    margin: 20px auto;
     display: block;
     text-align: center;
-  }
+}
+
+.ReviewerInfo{
+    margin-top: 15px;
+}
+
+.ReviewerInfo h3{
+    color: grey;
+    margin: 5px;
+}
+.ReviewerInfo h3 b{
+    color: black;
+}
+
+.Error{
+    color: #A00;
+    background-color: yellow;
+    border: 1px solid red;
+    padding: 5px 0px;
+    margin: 0px 100px;
+}
