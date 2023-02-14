@@ -6,34 +6,26 @@ import loadJSON from './../loader';
 import classes from './../styles/ReviewFinder.module.css';
 // import { stringify } from 'querystring';
 
+// eslint-disable-next-line
+type reviewerType = { 'value': number; 'label': string; 'avatar': string; 'isDisabled'?: boolean};
+// eslint-disable-next-line
+type reviewerTypeLoad = { 'id': number; 'avatar_url': string; 'login': string; type: string};
+// eslint-disable-next-line
+type ReviewBlackList = MultiValue<reviewerType>;
+
 const ReviewFinder = () => {
 
-    // eslint-disable-next-line
-    type reviewerType = { 'value': number; 'label': string; 'avatar': string; 'isDisabled'?: boolean};
-    let reviewerList: Array<reviewerType> = [
+    let reviewerList: ReviewBlackList = [
         { value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true },
     ];
-    let filteredBlack: Array<reviewerType> = []; // Отфильтрованный массив
+    let filteredBlack: ReviewBlackList = []; // Отфильтрованный массив
     const [black, setBlack] = useState(reviewerList);
     const [blackSelected, setblackSelected] = useState(filteredBlack);
 
-    const [disabledReviewerIds, setDisabledReviewerIds] = useState(Array<number>);
-    const setBlackList = (e: MultiValue<reviewerType | undefined>) => {
-        if (typeof e !== 'undefined') {
-            // @ts-expect-error: выше уже проверили undefined
-            setblackSelected(e);
-            setDisabledReviewerIds(
-                // @ts-expect-error: выше уже проверили undefined
-                e.map((reviewer: reviewerType) => reviewer.value)
-            );
-        } else {
-            setDisabledReviewerIds([]);
-            setblackSelected([]);
-        }
-    };
+    const [disabledReviewerIds, setDisabledReviewerIds] = useState<Array<number>>([]);
 
     const [showReviewer, setShowReviewer] = useState({id: 0, login: '', avatar: ''});
-    const [settingsVisibility, setSettingsVisibility] = useLocalStorage('settingsVisibility', '0');
+    const [isVisibleSettings, setSettingsVisibility] = useLocalStorage('isVisibleSettings', false);
     const [login, setLogin] = useLocalStorage('login', '');
     const [repo, setRepo] = useLocalStorage('repo', '');
 
@@ -47,8 +39,6 @@ const ReviewFinder = () => {
         try {
             const reviewersData = await loadJSON(`https://api.github.com/repos/${login}/${repo}/contributors`);
             // console.log(reviewersData);
-            // eslint-disable-next-line
-            type reviewerTypeLoad = { 'id': number; 'avatar_url': string; 'login': string; type: string};
             reviewerList = reviewersData.map((reviewer: reviewerTypeLoad) => {
                 return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
             });
@@ -81,12 +71,10 @@ const ReviewFinder = () => {
         <div className={classes.ReviewFinder}>
             <button
                 className="settingsButton"
-                onClick={(e) => setSettingsVisibility(settingsVisibility === '0' ? '1' : '0')}
-            >{settingsVisibility === '1' ? 'Скрыть' : 'Показать'} настройки</button>
+                onClick={() => setSettingsVisibility(!isVisibleSettings)}
+            >{isVisibleSettings ? 'Скрыть' : 'Показать'} настройки</button>
 
-            {settingsVisibility === '0' ?
-                <span></span>
-            :
+            {isVisibleSettings ??
                 <ul className={classes.ReviewFinderList}>
                     <li>
                         Логин: <input
@@ -106,7 +94,7 @@ const ReviewFinder = () => {
                     </li>
                 </ul>
             }
-            <button className={classes.ReviewLoadButton} onClick={loadReviewers}>Загрузить ревьюеров</button>
+            <button className={classes.ReviewLoadButton} onClick={loadReviewers} type='button'>Загрузить ревьюеров</button>
 
             {!loadingError ?
                 <div>
@@ -118,14 +106,26 @@ const ReviewFinder = () => {
                     options={black}
                     className="basic-multi-select"
                     classNamePrefix="select"
-                    onChange={(e) => setBlackList(e)}
+                    onChange={(e) => {
+
+                        if (typeof e !== 'undefined') {
+                            setblackSelected(e);
+                            setDisabledReviewerIds(
+                                e.map((reviewer: reviewerType) => reviewer.value)
+                            );
+                        } else {
+                            setDisabledReviewerIds([]);
+                            setblackSelected([]);
+                        }
+
+                    }}
                     />
 
                     <button className={classes.ReviewFindButton} onClick={getReviewer}>Подобрать случайного ревьюера</button>
                     <div className={classes.ReviewerInfo}>
                     {showReviewer.id ?
                         <div>
-                            <img src={showReviewer.avatar} style={{width: '100px'}} />
+                            <img src={showReviewer.avatar} style={{width: '100px'}} alt={showReviewer.login} />
                             <h3>id: <b>{showReviewer.id}</b></h3>
                             <h3>login: <b>{showReviewer.login}</b></h3>
                         </div>

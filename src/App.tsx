@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-import React, { useState, useRef, useMemo } from 'react';
+import React from 'react';
 import './App.css';
 import ReviewFinder from './componets/ReviewFinder';
 
