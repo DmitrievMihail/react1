@@ -1,0 +1,22 @@
+.ReviewFinder {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.ReviewFindButton, .ReviewLoadButton{
+    margin: 20px auto;
+    display: block;
+    text-align: center;
+}
+
+.ReviewerInfo{
+    margin-top: 15px;
+}
+
+.ReviewerInfo h3{
+    color: grey;
+    margin: 5px;
+}
+.ReviewerInfo h3 b{
+    color: black;
+}

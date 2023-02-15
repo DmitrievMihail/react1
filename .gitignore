@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+package-lock.json
+package.json
+start.bat
+help.txt
+.prettierrc.js
+.eslintrc.js
+
+yarn.lock
