@@ -3,27 +3,6 @@
     padding-bottom: 20px;
 }
 
-.ReviewFinderList {
-    list-style-type: none;
-    margin: 0;
-    padding: 3px 10px;
-    text-align: left;
-    /* display: flex; */
-}
-
-.ReviewFinderList li {
-    margin: 3px 0px;
-}
-
-.ReviewFinderList input{
-    width: 350px;
-    float: right;
-}
-
-.ReviewFinderButton {
-
-}
-
 .ReviewFindButton, .ReviewLoadButton{
     margin: 20px auto;
     display: block;
@@ -40,12 +19,4 @@
 }
 .ReviewerInfo h3 b{
     color: black;
-}
-
-.Error{
-    color: #A00;
-    background-color: yellow;
-    border: 1px solid red;
-    padding: 5px 0px;
-    margin: 0px 100px;
 }

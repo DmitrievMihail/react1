@@ -1,5 +1,7 @@
 import React, {useState } from 'react';
 import Select, { MultiValue } from 'react-select';
+import ErrorMsg from './ErrorMsg';
+import ReviewFinderSettings from './ReviewFinderSettings';
 import useLocalStorage from './../storage';
 import loadJSON from './../loader';
 // eslint-disable-next-line
@@ -26,10 +28,11 @@ const ReviewFinder = () => {
 
     const [showReviewer, setShowReviewer] = useState({id: 0, login: '', avatar: ''});
     const [isVisibleSettings, setSettingsVisibility] = useLocalStorage('isVisibleSettings', false);
-    const [login, setLogin] = useLocalStorage('login', '');
-    const [repo, setRepo] = useLocalStorage('repo', '');
 
     const [loadingError, setLoadingError] = useState('');
+
+    const [login, setLogin] = useLocalStorage('login', '');
+    const [repo, setRepo] = useLocalStorage('repo', '');
 
     const loadReviewers = async () => {
         // console.log('Грузим список ревьюеров');
@@ -67,6 +70,9 @@ const ReviewFinder = () => {
         }
     };
 
+    // repo={getRepo} login={getLogin}
+    // <ReviewFinderSettings msg=''/>
+
     return (
         <div className={classes.ReviewFinder}>
             <button
@@ -74,25 +80,10 @@ const ReviewFinder = () => {
                 onClick={() => setSettingsVisibility(!isVisibleSettings)}
             >{isVisibleSettings ? 'Скрыть' : 'Показать'} настройки</button>
 
-            {isVisibleSettings ??
-                <ul className={classes.ReviewFinderList}>
-                    <li>
-                        Логин: <input
-                            type='text'
-                            placeholder='использовал twbs'
-                            value={login}
-                            onChange={(e) => setLogin(e.target.value)}
-                        />
-                    </li>
-                    <li>
-                        Репозиторий: <input
-                            type='text'
-                            placeholder='использовал bootstrap'
-                            value={repo}
-                            onChange={(e) => setRepo(e.target.value)}
-                        />
-                    </li>
-                </ul>
+            {!isVisibleSettings ?
+                 <ReviewFinderSettings login={login} setLogin={setLogin} repo={repo} setRepo={setRepo} />
+                :
+                <span></span>
             }
             <button className={classes.ReviewLoadButton} onClick={loadReviewers} type='button'>Загрузить ревьюеров</button>
 
@@ -135,7 +126,7 @@ const ReviewFinder = () => {
                     </div>
                 </div>
             :
-                <h3 className={classes.Error}>{loadingError}</h3>
+                <ErrorMsg msg={loadingError} />
             }
         </div>
     );

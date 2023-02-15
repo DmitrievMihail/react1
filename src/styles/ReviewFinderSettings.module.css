@@ -1,0 +1,15 @@
+.ReviewFinderList {
+    list-style-type: none;
+    margin: 0;
+    padding: 3px 10px;
+    text-align: left;
+}
+
+.ReviewFinderList li {
+    margin: 3px 0px;
+}
+
+.ReviewFinderList input{
+    width: 350px;
+    float: right;
+}
