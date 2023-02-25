@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-//  import useLocalStorage from './../storage';
+import { Provider } from 'react-redux';
+import { store } from './redux/store'
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinderSettings.module.css';
 
