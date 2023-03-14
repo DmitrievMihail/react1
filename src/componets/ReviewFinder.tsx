@@ -1,21 +1,14 @@
 import React, {useState } from 'react';
 import { Provider } from 'react-redux';
 // import { store } from './redux/store';
-import Select, { MultiValue } from 'react-select';
+import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
+import {reviewerType, reviewerTypeLoad, ReviewBlackList} from './../types/ReviewFinder';
 import ReviewFinderSettings from './ReviewFinderSettings';
 import useLocalStorage from './../storage';
 import loadJSON from './../loader';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
-// import { stringify } from 'querystring';
-
-// eslint-disable-next-line
-type reviewerType = { 'value': number; 'label': string; 'avatar': string; 'isDisabled'?: boolean};
-// eslint-disable-next-line
-type reviewerTypeLoad = { 'id': number; 'avatar_url': string; 'login': string; type: string};
-// eslint-disable-next-line
-type ReviewBlackList = MultiValue<reviewerType>;
 
 const ReviewFinder = () => {
 
