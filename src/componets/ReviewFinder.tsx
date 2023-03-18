@@ -73,7 +73,7 @@ const ReviewFinder = () => {
             <button
                 className="settingsButton"
                 onClick={() => setSettingsVisibility(!isVisibleSettings)}
-            >{isVisibleSettings ? 'Скрыть' : 'Показать'} настройки</button>
+            >{isVisibleSettings ? 'Показать' : 'Скрыть'} настройки</button>
 
             {!isVisibleSettings ?
                  <ReviewFinderSettings login={login} setLogin={setLogin} repo={repo} setRepo={setRepo} />
