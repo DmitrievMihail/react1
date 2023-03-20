@@ -3,9 +3,10 @@ import { reviewBlackList, showReviewerDefault, showReviewerType, reviewerType, r
 export type State = {
     reviewer: string, // showReviewerType
     blacklist: reviewBlackList,
-    reviewerList: Array<reviewerType>
+    reviewerList: Array<reviewerType>,
     login: string,
-    repo: string
+    repo: string,
+    visible: boolean,
 }
 /* eslint-enable */
 export const initialState: State = {
@@ -14,6 +15,7 @@ export const initialState: State = {
     reviewerList: [],
     login: '',
     repo: '',
+    visible: false,
 };
 
 /* eslint-disable */
@@ -24,7 +26,7 @@ export enum ActionTypes {
     SET_LOGIN = 'SET_LOGIN',
     SET_REPO = 'SET_REPO',
     SET_REVIWER = 'SET_REVIWER',
-    SET_VISIBLE_SETTINGS = 'SET_VISIBLE_SETTINGS',
+    TOGGLE_VISIBLE = 'TOGGLE_VISIBLE',
 }
 
 interface SetStateAction {
@@ -56,10 +58,8 @@ interface SetRevierActions {
     type: ActionTypes.SET_REVIWER;
 	payload: string;
 }
-
-interface SetVisibleSettingsActions {
-    type: ActionTypes.SET_VISIBLE_SETTINGS;
-	payload: boolean;
+interface ToggleVisibleActions {
+    type: ActionTypes.TOGGLE_VISIBLE;
 }
 
 const reducer = (state: State = initialState, action: Action) => {
@@ -67,7 +67,7 @@ const reducer = (state: State = initialState, action: Action) => {
         case ActionTypes.SET_STATE:
             return {
                 ...state,
-                userData: action.payload,
+                ...action.payload,
             };
         case ActionTypes.SET_BLACKLIST:
             return {
@@ -94,10 +94,10 @@ const reducer = (state: State = initialState, action: Action) => {
 				...state,
 				reviewer: action.payload,
 			};
-		case ActionTypes.SET_VISIBLE_SETTINGS:
+		case ActionTypes.TOGGLE_VISIBLE:
 			return {
 				...state,
-				visible: action.payload,
+				visible: !state.visible,
 			};
         default:
             return state;
@@ -111,7 +111,7 @@ export type ReviewerData = {
     html_url: string
 }
 
-export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | SetVisibleSettingsActions;
+export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | ToggleVisibleActions;
 
 export default reducer;
 /* eslint-enable */

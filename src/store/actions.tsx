@@ -7,4 +7,6 @@ export const setBlacklist = (value: Array<string>): Action => ({type: ActionType
 // export const setContributors = (value: Array<Contributor>): Action => ({type: 'SET_CONTRIBUTORS', payload: value});
 export const setLogin = (value: string): Action => ({type: ActionTypes.SET_LOGIN, payload: value});
 export const setRepo = (value: string): Action => ({type: ActionTypes.SET_REPO, payload: value});
-export const setAppState = (value: Object): Action => ({type: ActionTypes.SET_VISIBLE_SETTINGS, payload: value as boolean});
+export const toggleVisibility = (): Action => ({type: ActionTypes.TOGGLE_VISIBLE});
+// export const toggleVisibility = () => { console.log(123);};
+export const setAppState = (value: any): Action => ({type: ActionTypes.SET_STATE, payload: value});

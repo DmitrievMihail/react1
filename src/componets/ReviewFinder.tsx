@@ -2,7 +2,7 @@ import React, {FC, useState } from 'react';
 import { Provider } from 'react-redux';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
-import { setLogin, setRepo } from '../store/actions';
+import { setLogin, setRepo, toggleVisibility } from '../store/actions';
 
 import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
@@ -26,7 +26,7 @@ const ReviewFinder: FC = () => {
     const [disabledReviewerIds, setDisabledReviewerIds] = useState<Array<number>>([]);
 
     const [showReviewer, setShowReviewer] = useState(showReviewerDefault);
-    const [isVisibleSettings, setSettingsVisibility] = useLocalStorage('isVisibleSettings', false);
+    const isVisible = useSelector((state: State) => state.visible);
 
     const [loadingError, setLoadingError] = useState('');
 
@@ -74,15 +74,23 @@ const ReviewFinder: FC = () => {
     // repo={getRepo} login={getLogin}
     // <ReviewFinderSettings msg=''/>
 
+    const toggleVisibility2 = () => {
+        console.log('visible:', isVisible);
+        toggleVisibility();
+    };
+
+    // login={login as string} setLogin={setLogin as Function} repo={repo as string} setRepo={setRepo as Function}
+    const dispatch = useDispatch();
+
     return (
         <div className={classes.ReviewFinder}>
             <button
                 className="settingsButton"
-                onClick={() => setSettingsVisibility(!isVisibleSettings)}
-            >{isVisibleSettings ? 'Показать' : 'Скрыть'} настройки</button>
+                onClick={() => dispatch(toggleVisibility())}
+            >{isVisible ? 'Скрыть' : 'Показать' } настройки</button>
 
-            {!isVisibleSettings ?
-                 <ReviewFinderSettings login={login as string} setLogin={setLogin as Function} repo={repo as string} setRepo={setRepo as Function} />
+            {isVisible ?
+                 <ReviewFinderSettings />
                 :
                 <span></span>
             }
