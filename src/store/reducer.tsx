@@ -18,7 +18,7 @@ export const initialState: State = {
 
 /* eslint-disable */
 export enum ActionTypes {
-    SET_USER_DATA = 'SET_USER_DATA',
+    SET_STATE = 'SET_STATE',
     SET_BLACKLIST = 'SET_BLACKLIST',
     SET_REVIEWERLIST = 'SET_REVIEWERLIST',
     SET_LOGIN = 'SET_LOGIN',
@@ -27,9 +27,9 @@ export enum ActionTypes {
     SET_VISIBLE_SETTINGS = 'SET_VISIBLE_SETTINGS',
 }
 
-interface SetDataActions {
-    type: ActionTypes.SET_USER_DATA;
-	payload: string;
+interface SetStateAction {
+    type: ActionTypes.SET_STATE;
+	payload: any[];
 }
 
 interface SetBlackListAction {
@@ -64,7 +64,7 @@ interface SetVisibleSettingsActions {
 
 const reducer = (state: State = initialState, action: Action) => {
     switch (action.type) {
-        case ActionTypes.SET_USER_DATA:
+        case ActionTypes.SET_STATE:
             return {
                 ...state,
                 userData: action.payload,
@@ -111,7 +111,7 @@ export type ReviewerData = {
     html_url: string
 }
 
-export type Action = SetDataActions | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | SetVisibleSettingsActions;
+export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | SetVisibleSettingsActions;
 
 export default reducer;
 /* eslint-enable */
