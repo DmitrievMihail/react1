@@ -4,12 +4,11 @@ import { State} from '../store/reducer';
 import { setLogin, setRepo } from '../store/actions';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinderSettings.module.css';
+import { DispatchSettings } from '../models/fetchUserData';
 
-const ReviewFinderSettings: FC = () => { // props: ReviewFinderSettingsType
+const ReviewFinderSettings: FC = () => {
 
-    // type DispatchSettings = (arg: FetchUserDataFromGithub | AnyAction) => Promise<void>
-
-    const dispatch = useDispatch();
+    const dispatch = useDispatch() as DispatchSettings;
     const login = useSelector((state: State) => state.login);
     const repo = useSelector((state: State) => state.repo);
 

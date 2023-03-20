@@ -1,22 +1,21 @@
-import React, {FC, useState } from 'react';
-import { Provider } from 'react-redux';
+import {FC, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
-import { setLogin, setRepo, toggleVisibility } from '../store/actions';
+import { toggleVisibility } from '../store/actions';
 
 import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
 import {reviewerType, reviewerTypeLoad, reviewBlackList, showReviewerDefault, showReviewerType} from './../types/ReviewFinder';
 import ReviewFinderSettings from './ReviewFinderSettings';
-import useLocalStorage from './../storage';
 import loadJSON from './../loader';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
 import ReviewInfo from './ReviewInfo';
+import { DispatchSettings, loadReviewers } from '../models/fetchUserData';
 
 const ReviewFinder: FC = () => {
 
-    let reviewerList: reviewBlackList = [
+    const reviewerList: reviewBlackList = [
         {value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true},
     ];
     let filteredBlack: reviewBlackList = []; // Отфильтрованный массив
@@ -30,31 +29,8 @@ const ReviewFinder: FC = () => {
 
     const [loadingError, setLoadingError] = useState('');
 
-    // const [login, setLogin] = useLocalStorage('login', '');
-    // const [repo, setRepo] = useLocalStorage('repo', '');
     const login = useSelector((state: State) => state.login);
     const repo = useSelector((state: State) => state.repo);
-
-    const loadReviewers = async () => {
-        // console.log('Грузим список ревьюеров');
-        setShowReviewer(showReviewerDefault);
-        setBlack([]);
-        setblackSelected([]);
-        try {
-            const reviewersData = await loadJSON(`https://api.github.com/repos/${login}/${repo}/contributors`);
-            // console.log(reviewersData);
-            reviewerList = reviewersData.map((reviewer: reviewerTypeLoad) => {
-                return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
-            });
-            // reviewerList.length = 2;
-            setBlack(reviewerList);
-            // console.log(reviewerList);
-            setLoadingError('');
-        } catch (err) {
-            console.log(err);
-            setLoadingError('Ошибка загрузки ревьюеров');
-        }
-    };
 
     const getReviewer = () => {
         // console.log('Подбираем ревьюера из списка', disabledReviewerIds);
@@ -71,16 +47,7 @@ const ReviewFinder: FC = () => {
         }
     };
 
-    // repo={getRepo} login={getLogin}
-    // <ReviewFinderSettings msg=''/>
-
-    const toggleVisibility2 = () => {
-        console.log('visible:', isVisible);
-        toggleVisibility();
-    };
-
-    // login={login as string} setLogin={setLogin as Function} repo={repo as string} setRepo={setRepo as Function}
-    const dispatch = useDispatch();
+    const dispatch = useDispatch() as DispatchSettings;
 
     return (
         <div className={classes.ReviewFinder}>
