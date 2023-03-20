@@ -3,25 +3,26 @@ import { Provider } from 'react-redux';
 // import { store } from './redux/store';
 import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
-import {reviewerType, reviewerTypeLoad, ReviewBlackList} from './../types/ReviewFinder';
+import {reviewerType, reviewerTypeLoad, reviewBlackList, showReviewerDefault, showReviewerType} from './../types/ReviewFinder';
 import ReviewFinderSettings from './ReviewFinderSettings';
 import useLocalStorage from './../storage';
 import loadJSON from './../loader';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
+import ReviewInfo from './ReviewInfo';
 
 const ReviewFinder = () => {
 
-    let reviewerList: ReviewBlackList = [
-        { value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true },
+    let reviewerList: reviewBlackList = [
+        {value: 0, label: 'Логины отсутствуют', avatar: '', isDisabled: true},
     ];
-    let filteredBlack: ReviewBlackList = []; // Отфильтрованный массив
+    let filteredBlack: reviewBlackList = []; // Отфильтрованный массив
     const [black, setBlack] = useState(reviewerList);
     const [blackSelected, setblackSelected] = useState(filteredBlack);
 
     const [disabledReviewerIds, setDisabledReviewerIds] = useState<Array<number>>([]);
 
-    const [showReviewer, setShowReviewer] = useState({id: 0, login: '', avatar: ''});
+    const [showReviewer, setShowReviewer] = useState(showReviewerDefault);
     const [isVisibleSettings, setSettingsVisibility] = useLocalStorage('isVisibleSettings', false);
 
     const [loadingError, setLoadingError] = useState('');
@@ -31,7 +32,7 @@ const ReviewFinder = () => {
 
     const loadReviewers = async () => {
         // console.log('Грузим список ревьюеров');
-        setShowReviewer({id: 0, login: '', avatar: ''});
+        setShowReviewer(showReviewerDefault);
         setBlack([]);
         setblackSelected([]);
         try {
@@ -58,7 +59,7 @@ const ReviewFinder = () => {
         // console.log(black);
         if (!filteredBlack.length) {
             // console.log('В списке нет ревьюверов');
-            setShowReviewer({id: 0, login: '', avatar: ''});
+            setShowReviewer(showReviewerDefault);
         } else {
             const reviewer = filteredBlack[Math.floor(Math.random() * (filteredBlack.length))];
             setShowReviewer({id: reviewer.value, login: reviewer.label, avatar: reviewer.avatar});
@@ -76,7 +77,7 @@ const ReviewFinder = () => {
             >{isVisibleSettings ? 'Показать' : 'Скрыть'} настройки</button>
 
             {!isVisibleSettings ?
-                 <ReviewFinderSettings login={login} setLogin={setLogin} repo={repo} setRepo={setRepo} />
+                 <ReviewFinderSettings login={login as string} setLogin={setLogin as Function} repo={repo as string} setRepo={setRepo as Function} />
                 :
                 <span></span>
             }
@@ -108,17 +109,8 @@ const ReviewFinder = () => {
                     />
 
                     <button className={classes.ReviewFindButton} onClick={getReviewer}>Подобрать случайного ревьюера</button>
-                    <div className={classes.ReviewerInfo}>
-                    {showReviewer.id ?
-                        <div>
-                            <img src={showReviewer.avatar} style={{width: '100px'}} alt={showReviewer.login} />
-                            <h3>id: <b>{showReviewer.id}</b></h3>
-                            <h3>login: <b>{showReviewer.login}</b></h3>
-                        </div>
-                    :
-                        <h3>Ревьюер отсутствует</h3>
-                    }
-                    </div>
+
+                    <ReviewInfo {...showReviewer} />
                 </div>
             :
                 <ErrorMsg msg={loadingError} />
