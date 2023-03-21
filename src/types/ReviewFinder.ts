@@ -16,3 +16,5 @@ export type ReviewFinderSettingsType = {
     repo: string,
     setRepo: Function 
 }
+
+export type searchListType = { login: string, avatar_url: string, html_url: string };
