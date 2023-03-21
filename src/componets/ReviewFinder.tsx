@@ -1,7 +1,7 @@
 import {FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
-import { setBlacklist, toggleVisibility } from '../store/actions';
+import { setBlacklist, toggleVisibility, loadReviewers } from '../store/actions';
 import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
 import {reviewerType, reviewerTypeLoad, reviewBlackList, showReviewerDefault, showReviewerType, searchListType} from './../types/ReviewFinder';
@@ -10,7 +10,7 @@ import loadJSON from './../loader';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
 import ReviewInfo from './ReviewInfo';
-import { DispatchSettings, loadReviewers } from '../models/fetchUserData';
+import fetchUserData, { DispatchSettings, fetchReviewers } from '../models/fetchUserData';
 
 const ReviewFinder: FC = () => {
 
@@ -27,8 +27,7 @@ const ReviewFinder: FC = () => {
     const isVisible = useSelector((state: State) => state.visible);
 
     const [loadingReviewer, setLoadingReviewer] = useState<boolean>(false);
-    // const [loadingError, setLoadingError] = useState('');
-    let loadingError = '';
+    const [loadingError, setLoadingError] = useState('');
 
     const getReviewer = () => {
         // console.log('Подбираем ревьюера из списка', disabledReviewerIds);
@@ -78,14 +77,13 @@ const ReviewFinder: FC = () => {
         };
     }, [loadingReviewer, showRandomReviewer]);
 
-    const handleClick = (): void => {
-        // if (blacklist.length !== contributors.length) {
-            loadingError = '';
-            setLoadingReviewer(true);
-            setTimeout(() => setLoadingReviewer(false), 2000);
-        // } else {
-        //    setError(true);
-        // }
+    const handleLoadReviewers = () => {
+        setLoadingError('');
+        dispatch(fetchUserData('', ''))
+            .catch((error) => {
+                setLoadingError('Ошибка загрузки ревьюверов');
+            });
+
     };
 
     return (
@@ -97,7 +95,7 @@ const ReviewFinder: FC = () => {
 
             {isVisible ? <ReviewFinderSettings /> : null}
 
-            <button className={classes.ReviewLoadButton} onClick={handleClick} type='button'>Загрузить ревьюеров</button>
+            <button className={classes.ReviewLoadButton} onClick={handleLoadReviewers} type='button'>Загрузить ревьюеров</button>
 
             {!loadingError ?
                 <div>
