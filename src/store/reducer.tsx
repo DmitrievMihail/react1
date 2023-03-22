@@ -4,6 +4,7 @@ import { reviewBlackList, showReviewerDefault, showReviewerType, reviewerType, r
 export type State = {
     reviewer: string, // showReviewerType
     blacklist: reviewBlackList,
+    blackSelected: reviewBlackList,
     reviewerList: Array<reviewerType>,
     login: string,
     repo: string,
@@ -14,6 +15,7 @@ export type State = {
 export const initialState: State = {
     reviewer: '', // showReviewerDefault
     blacklist: [],
+    blackSelected: [],
     reviewerList: [],
     login: '',
     repo: '',
@@ -25,6 +27,7 @@ export const initialState: State = {
 export enum ActionTypes {
     SET_STATE = 'SET_STATE',
     SET_BLACKLIST = 'SET_BLACKLIST',
+    SET_BLACK_SELECTED = 'SET_BLACK_SELECTED',
     SET_REVIEWERLIST = 'SET_REVIEWERLIST',
     SET_LOGIN = 'SET_LOGIN',
     SET_REPO = 'SET_REPO',
@@ -41,7 +44,11 @@ interface SetStateAction {
 
 interface SetBlackListAction {
     type: ActionTypes.SET_BLACKLIST;
-	payload: any[];
+	payload: reviewBlackList;
+}
+interface SetBlackSelectedAction {
+    type: ActionTypes.SET_BLACK_SELECTED;
+	payload: reviewBlackList;
 }
 
 interface SetReviewerListAction {
@@ -84,6 +91,11 @@ const reducer = (state: State = initialState, action: Action) => {
                 ...state,
                 blacklist: action.payload,
             };
+        case ActionTypes.SET_BLACK_SELECTED:
+            return {
+                ...state,
+                blackSelected: action.payload,
+            };            
         case ActionTypes.SET_REVIEWERLIST:
             return {
                 ...state,
@@ -109,10 +121,6 @@ const reducer = (state: State = initialState, action: Action) => {
 				...state,
 				visible: !state.visible,
 			};
-        // case ActionTypes.LOAD_REVIEWERS:
-        //     fetchReviewers(); // .then((response) => {})
-            
-        //     return state; // Ничего не возвращаем, асинхронная функция
         case ActionTypes.SET_ERROR:
             console.log('***', action.payload);
             return {
@@ -131,7 +139,16 @@ export type ReviewerData = {
     html_url: string
 }
 
-export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | ToggleVisibleActions | SetRevierActions | SetErrorActions;
+export type Action = SetStateAction
+    | SetBlackListAction
+    | SetReviewerListAction
+    | SetLoginActions
+    | SetRepoActions
+    | SetRevierActions
+    | ToggleVisibleActions
+    | SetRevierActions
+    | SetErrorActions
+    | SetBlackSelectedAction;
 
 export default reducer;
 /* eslint-enable */

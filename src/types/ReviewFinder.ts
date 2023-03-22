@@ -18,3 +18,11 @@ export type ReviewFinderSettingsType = {
 }
 
 export type searchListType = { login: string, avatar_url: string, html_url: string };
+
+/* eslint-disable */
+export interface GroupBase<Option> {
+    readonly options: readonly Option[];
+    readonly label?: string;
+}
+/* eslint-enable */
+

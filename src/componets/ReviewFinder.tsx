@@ -1,7 +1,7 @@
 import {FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
-import { setBlack, toggleVisibility } from '../store/actions';
+import { setBlack, setblackSelected, toggleVisibility } from '../store/actions';
 import Select from 'react-select';
 import ErrorMsg from './ErrorMsg';
 import {reviewerType, reviewerTypeLoad, reviewBlackList, showReviewerDefault, showReviewerType, searchListType} from './../types/ReviewFinder';
@@ -19,13 +19,14 @@ const ReviewFinder: FC = () => {
     ];
     const filteredBlack: reviewBlackList = []; // Отфильтрованный массив
     // const [black, setBlack] = useState(reviewerList);
-    const [blackSelected, setblackSelected] = useState(filteredBlack);
+    // const [blackSelected, setblackSelected] = useState(filteredBlack);
 
     const [disabledReviewerIds, setDisabledReviewerIds] = useState<Array<number>>([]);
 
     const [showReviewer, setShowReviewer] = useState(showReviewerDefault);
     const isVisible = useSelector((state: State) => state.visible);
     const blacklist = useSelector((state: State) => state.blacklist);
+    const blackSelected = useSelector((state: State) => state.blackSelected);
 
     const [loadingReviewer, setLoadingReviewer] = useState<boolean>(false);
     const [loadingError, setLoadingError] = useState('');
@@ -49,16 +50,11 @@ const ReviewFinder: FC = () => {
 
     const dispatch = useDispatch() as DispatchSettings;
 
-    // onClick={loadReviewers}
-
-    const [searchList, setSearchList] = useState<Array<searchListType>>([]);
-
     const handleLoadReviewers = () => {
         setLoadingError('');
         dispatch(fetchUserData()).catch((error) => {
                 setLoadingError('Ошибка загрузки ревьюверов');
         });
-
     };
 
     return (
@@ -85,15 +81,10 @@ const ReviewFinder: FC = () => {
                     onChange={(e) => {
 
                         if (typeof e !== 'undefined') {
-                            setblackSelected(e);
-                            setDisabledReviewerIds(
-                                e.map((reviewer: reviewerType) => reviewer.value)
-                            );
+                            dispatch(setblackSelected(e));
                         } else {
-                            setDisabledReviewerIds([]);
-                            setblackSelected([]);
+                            dispatch(setblackSelected([]));
                         }
-
                     }}
                     />
 

@@ -1,7 +1,7 @@
 import { request } from "../hooks/http.hook";
 import { RootState } from "../store/store";
 import { Dispatch } from "redux";
-import { setBlack, setLogin, setRepo, setReviewers, toggleVisibility } from "../store/actions"; // setUserData, setContributors
+import { setBlack, setLogin, setRepo, setReviewers, setblackSelected, toggleVisibility } from "../store/actions"; // setUserData, setContributors
 import loadJSON from "../loader";
 import { AnyAction } from 'redux';
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,7 @@ const fetchUserData: FetchUserData = () => {
     return (dispatch: Dispatch, getState: () => RootState) => {
         dispatch(setReviewers([showReviewerDefault]));
         dispatch(setBlack([]));
-        // setblackSelected([]);
+        dispatch(setblackSelected([]));
         const url = `https://api.github.com/repos/${getState().login}/${getState().repo}/contributors`;
         const load = loadJSON(url).then((responce) => {
             console.log('Загрузили список', responce);
@@ -26,6 +26,7 @@ const fetchUserData: FetchUserData = () => {
                 return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
             });
             console.log('Отформатили', reviewerList);
+            dispatch(setReviewers(reviewerList));
             dispatch(setBlack(reviewerList));
         });
         // console.log(load);
