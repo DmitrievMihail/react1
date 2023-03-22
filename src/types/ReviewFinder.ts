@@ -9,20 +9,6 @@ export type reviewBlackList = MultiValue<reviewerType>;
 export type showReviewerType = {'id': number, login: string, avatar: string};
 
 export const showReviewerDefault: showReviewerType = {id: 0, login: '', avatar: ''};
+export const reviewersDefault: reviewerType ={'value': 0, 'label': 'Логины не загружены', 'avatar': '', 'isDisabled': true}
 
-export type ReviewFinderSettingsType = {
-    login: string,
-    setLogin: Function,
-    repo: string,
-    setRepo: Function 
-}
-
-export type searchListType = { login: string, avatar_url: string, html_url: string };
-
-/* eslint-disable */
-export interface GroupBase<Option> {
-    readonly options: readonly Option[];
-    readonly label?: string;
-}
-/* eslint-enable */
 

@@ -1,11 +1,8 @@
-// import { fetchReviewers } from "../models/fetchUserData";
-import { reviewBlackList, showReviewerDefault, showReviewerType, reviewerType, reviewerTypeLoad } from "../types/ReviewFinder";
+import { reviewBlackList } from "../types/ReviewFinder";
 /* eslint-disable */
 export type State = {
-    reviewer: string, // showReviewerType
     blacklist: reviewBlackList,
-    blackSelected: reviewBlackList,
-    reviewerList: Array<reviewerType>,
+    reviewerList: reviewBlackList,
     login: string,
     repo: string,
     visible: boolean,
@@ -13,9 +10,7 @@ export type State = {
 }
 /* eslint-enable */
 export const initialState: State = {
-    reviewer: '', // showReviewerDefault
     blacklist: [],
-    blackSelected: [],
     reviewerList: [],
     login: '',
     repo: '',
@@ -27,11 +22,8 @@ export const initialState: State = {
 export enum ActionTypes {
     SET_STATE = 'SET_STATE',
     SET_BLACKLIST = 'SET_BLACKLIST',
-    SET_BLACK_SELECTED = 'SET_BLACK_SELECTED',
-    SET_REVIEWERLIST = 'SET_REVIEWERLIST',
     SET_LOGIN = 'SET_LOGIN',
     SET_REPO = 'SET_REPO',
-    SET_REVIWERS = 'SET_REVIWERS',
     TOGGLE_VISIBLE = 'TOGGLE_VISIBLE',
     SET_REVIEWERS = 'SET_REVIEWERS',
     SET_ERROR = 'SET_ERROR',
@@ -46,14 +38,10 @@ interface SetBlackListAction {
     type: ActionTypes.SET_BLACKLIST;
 	payload: reviewBlackList;
 }
-interface SetBlackSelectedAction {
-    type: ActionTypes.SET_BLACK_SELECTED;
-	payload: reviewBlackList;
-}
 
-interface SetReviewerListAction {
-    type: ActionTypes.SET_REVIEWERLIST;
-    payload: any[];
+interface SetReviewersAction {
+    type: ActionTypes.SET_REVIEWERS;
+	payload: reviewBlackList;
 }
 
 interface SetLoginActions {
@@ -66,10 +54,6 @@ interface SetRepoActions {
 	payload: string;
 }
 
-interface SetRevierActions {
-    type: ActionTypes.SET_REVIWERS;
-	payload: Array<showReviewerType>;
-}
 interface ToggleVisibleActions {
     type: ActionTypes.TOGGLE_VISIBLE;
 }
@@ -91,16 +75,11 @@ const reducer = (state: State = initialState, action: Action) => {
                 ...state,
                 blacklist: action.payload,
             };
-        case ActionTypes.SET_BLACK_SELECTED:
-            return {
-                ...state,
-                blackSelected: action.payload,
-            };            
-        case ActionTypes.SET_REVIEWERLIST:
+        case ActionTypes.SET_REVIEWERS:
             return {
                 ...state,
                 reviewerList: action.payload,
-			};
+            };
 		case ActionTypes.SET_LOGIN:
 			return {
 				...state,
@@ -110,11 +89,6 @@ const reducer = (state: State = initialState, action: Action) => {
 			return {
 				...state,
 				repo: action.payload,
-			};
-		case ActionTypes.SET_REVIWERS:
-			return {
-				...state,
-				reviewerList: action.payload,
 			};
 		case ActionTypes.TOGGLE_VISIBLE:
 			return {
@@ -132,7 +106,6 @@ const reducer = (state: State = initialState, action: Action) => {
     }
 }
 
-
 export type ReviewerData = {
     login: string,
     avatar_url: string,
@@ -141,14 +114,10 @@ export type ReviewerData = {
 
 export type Action = SetStateAction
     | SetBlackListAction
-    | SetReviewerListAction
+    | SetReviewersAction
     | SetLoginActions
     | SetRepoActions
-    | SetRevierActions
     | ToggleVisibleActions
-    | SetRevierActions
     | SetErrorActions
-    | SetBlackSelectedAction;
 
 export default reducer;
-/* eslint-enable */
