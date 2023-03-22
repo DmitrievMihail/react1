@@ -1,12 +1,12 @@
 import { request } from "../hooks/http.hook";
 import { RootState } from "../store/store";
 import { Dispatch } from "redux";
-import { setLogin, setRepo } from "../store/actions"; // setUserData, setContributors
+import { setBlack, setLogin, setRepo, setReviewers, toggleVisibility } from "../store/actions"; // setUserData, setContributors
 import loadJSON from "../loader";
 import { AnyAction } from 'redux';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
-import { reviewerTypeLoad } from "../types/ReviewFinder";
+import { reviewerTypeLoad, showReviewerDefault } from "../types/ReviewFinder";
 
 /* eslint-disable */
 export type FetchUserDataFromGithub = ( dispatch: Dispatch, getState: () => RootState ) => Promise<void>;
@@ -16,12 +16,19 @@ export type FetchUserData = () => FetchUserDataFromGithub;
 
 const fetchUserData: FetchUserData = () => {
     return (dispatch: Dispatch, getState: () => RootState) => {
+        dispatch(setReviewers([showReviewerDefault]));
+        dispatch(setBlack([]));
+        // setblackSelected([]);
         const url = `https://api.github.com/repos/${getState().login}/${getState().repo}/contributors`;
-        console.log(url);
         const load = loadJSON(url).then((responce) => {
-            console.log(responce);
+            console.log('Загрузили список', responce);
+            const reviewerList = responce.map((reviewer: reviewerTypeLoad) => {
+                return {value: reviewer.id, label: reviewer.login, avatar: reviewer.avatar_url, isDisabled: false };
+            });
+            console.log('Отформатили', reviewerList);
+            dispatch(setBlack(reviewerList));
         });
-        console.log(load);
+        // console.log(load);
         return load;
 
     };

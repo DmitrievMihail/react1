@@ -28,9 +28,9 @@ export enum ActionTypes {
     SET_REVIEWERLIST = 'SET_REVIEWERLIST',
     SET_LOGIN = 'SET_LOGIN',
     SET_REPO = 'SET_REPO',
-    SET_REVIWER = 'SET_REVIWER',
+    SET_REVIWERS = 'SET_REVIWERS',
     TOGGLE_VISIBLE = 'TOGGLE_VISIBLE',
-    LOAD_REVIEWERS = 'LOAD_REVIEWERS',
+    SET_REVIEWERS = 'SET_REVIEWERS',
     SET_ERROR = 'SET_ERROR',
 }
 
@@ -60,16 +60,13 @@ interface SetRepoActions {
 }
 
 interface SetRevierActions {
-    type: ActionTypes.SET_REVIWER;
-	payload: string;
+    type: ActionTypes.SET_REVIWERS;
+	payload: Array<showReviewerType>;
 }
 interface ToggleVisibleActions {
     type: ActionTypes.TOGGLE_VISIBLE;
 }
 
-interface LoadReviewersActions {
-    type: ActionTypes.LOAD_REVIEWERS;
-}
 interface SetErrorActions {
     type: ActionTypes.SET_ERROR;
     payload: string;
@@ -102,10 +99,10 @@ const reducer = (state: State = initialState, action: Action) => {
 				...state,
 				repo: action.payload,
 			};
-		case ActionTypes.SET_REVIWER:
+		case ActionTypes.SET_REVIWERS:
 			return {
 				...state,
-				reviewer: action.payload,
+				reviewerList: action.payload,
 			};
 		case ActionTypes.TOGGLE_VISIBLE:
 			return {
@@ -134,7 +131,7 @@ export type ReviewerData = {
     html_url: string
 }
 
-export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | ToggleVisibleActions | LoadReviewersActions | SetErrorActions;
+export type Action = SetStateAction | SetBlackListAction | SetReviewerListAction | SetLoginActions | SetRepoActions | SetRevierActions | ToggleVisibleActions | SetRevierActions | SetErrorActions;
 
 export default reducer;
 /* eslint-enable */
