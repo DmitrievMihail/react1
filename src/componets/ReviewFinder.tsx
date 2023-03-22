@@ -10,7 +10,7 @@ import loadJSON from './../loader';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
 import ReviewInfo from './ReviewInfo';
-import fetchUserData, { DispatchSettings, fetchReviewers } from '../models/fetchUserData';
+import fetchUserData, { DispatchSettings } from '../models/fetchUserData';
 
 const ReviewFinder: FC = () => {
 
@@ -50,39 +50,11 @@ const ReviewFinder: FC = () => {
 
     const [searchList, setSearchList] = useState<Array<searchListType>>([]);
 
-    const showRandomReviewer = useCallback((): void => {
-        // if (contributors) {
-            const count = Math.floor(Math.random() * (searchList.length - 1));
-
-            dispatch(
-                setBlacklist([''])
-                /*
-                setReviewer({
-                login: searchList[count].login,
-                avatarUrl: searchList[count].avatar_url,
-                htmlUrl: searchList[count].html_url,
-            }) */
-            );
-                    // }
-    }, [searchList]);
-
-    useEffect(() => {
-        let searchInterval: NodeJS.Timer;
-        if (loadingReviewer) {
-            searchInterval = setInterval(() => showRandomReviewer, 200);
-        }
-
-        return () => {
-              clearInterval(searchInterval);
-        };
-    }, [loadingReviewer, showRandomReviewer]);
-
     const handleLoadReviewers = () => {
         setLoadingError('');
-        dispatch(fetchUserData('', ''))
-            .catch((error) => {
+        dispatch(fetchUserData()).catch((error) => {
                 setLoadingError('Ошибка загрузки ревьюверов');
-            });
+        });
 
     };
 

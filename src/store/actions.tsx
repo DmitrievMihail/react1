@@ -8,5 +8,6 @@ export const setBlacklist = (value: Array<string>): Action => ({type: ActionType
 export const setLogin = (value: string): Action => ({type: ActionTypes.SET_LOGIN, payload: value});
 export const setRepo = (value: string): Action => ({type: ActionTypes.SET_REPO, payload: value});
 export const toggleVisibility = (): Action => ({type: ActionTypes.TOGGLE_VISIBLE});
-// export const toggleVisibility = () => { console.log(123);};
+export const loadReviewers = (): Action => ({type: ActionTypes.LOAD_REVIEWERS});
 export const setAppState = (value: any): Action => ({type: ActionTypes.SET_STATE, payload: value});
+// export const setError = (value: string): Action => ({type: ActionTypes.SET_ERROR, payload: value});
