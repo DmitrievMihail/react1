@@ -1,15 +1,15 @@
 import {FC, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { State} from '../store/reducer';
-import { setBlack, toggleVisibility } from '../store/actions';
 import Select from 'react-select';
+import { State} from '../store/reducer';
+import { setBlack, setReviewers, toggleVisibility } from '../store/actions';
 import ErrorMsg from './ErrorMsg';
-import { showReviewerDefault} from './../types/ReviewFinder';
+import { DispatchSettings, reviewerType, reviewersDefault, showReviewerDefault} from './../types/ReviewFinder';
 import ReviewFinderSettings from './ReviewFinderSettings';
+import ReviewInfo from './ReviewInfo';
+import fetchUserData from '../models/fetchUserData';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinder.module.css';
-import ReviewInfo from './ReviewInfo';
-import fetchUserData, { DispatchSettings } from '../models/fetchUserData';
 
 const ReviewFinder: FC = () => {
 
@@ -21,29 +21,25 @@ const ReviewFinder: FC = () => {
     const [loadingError, setLoadingError] = useState('');
 
     const getReviewer = () => {
-        console.log('Подбираем ревьюера из списка');
-        console.log(blacklist);
-        console.log(reviewerList);
-        /*
-        filteredBlack = black.filter((reviewer: reviewerType) => {
-            return (!disabledReviewerIds.includes(reviewer.value));
-        });
-        // console.log(black);
-        if (!filteredBlack.length) {
-            // console.log('В списке нет ревьюверов');
+        const filteredList = reviewerList.filter((reviewer: reviewerType) =>
+            !blacklist.some((black: reviewerType) => black.value === reviewer.value)
+        );
+        if (!filteredList.length) {
             setShowReviewer(showReviewerDefault);
         } else {
-            const reviewer = filteredBlack[Math.floor(Math.random() * (filteredBlack.length))];
+            const reviewer = filteredList[Math.floor(Math.random() * (filteredList.length))];
             setShowReviewer({id: reviewer.value, login: reviewer.label, avatar: reviewer.avatar});
         }
-        */
     };
 
     const dispatch = useDispatch() as DispatchSettings;
 
     const handleLoadReviewers = () => {
+        dispatch(setReviewers([reviewersDefault]));
+        dispatch(setBlack([]));
+        setShowReviewer(showReviewerDefault);
         setLoadingError('');
-        dispatch(fetchUserData()).catch((error) => {
+        dispatch(fetchUserData()).catch(() => {
                 setLoadingError('Ошибка загрузки ревьюверов');
         });
     };
@@ -83,7 +79,7 @@ const ReviewFinder: FC = () => {
                     {loadingError ?
                         <ErrorMsg msg={loadingError} />
                         :
-                        <h3>Логины не загружены</h3>
+                        <h3>Ревьюеры не загружены</h3>
                     }
                 </div>
             }

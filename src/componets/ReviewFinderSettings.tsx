@@ -2,9 +2,9 @@ import { FC } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { State} from '../store/reducer';
 import { setLogin, setRepo } from '../store/actions';
+import { DispatchSettings } from '../types/ReviewFinder';
 // eslint-disable-next-line
 import classes from './../styles/ReviewFinderSettings.module.css';
-import { DispatchSettings } from '../models/fetchUserData';
 
 const ReviewFinderSettings: FC = () => {
 

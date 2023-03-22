@@ -13,4 +13,3 @@ store.subscribe(() => {
 
 // eslint-disable-next-line
 export type RootState = ReturnType<typeof store.getState>;
-
